@@ -16,6 +16,14 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
+    if (reqData?.password !== reqData?.cpassword) {
+      return NextResponse.json(
+        { error: { message: "please confirm your password" } },
+        {
+          status: 404,
+        }
+      );
+    }
 
     let auth = await request.cookies.get(cookie_name);
     console.log("execution");
