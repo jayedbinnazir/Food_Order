@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { VerifiedForgotToken } from "../../../../lib/service/Token.service";
 import bcrypt from "bcrypt";
 import UserModel from "../../../../lib/models/User.Model";
+import { mongoConnect } from "../../../../lib/config/mongo";
 
 let cookie_name = <string>process.env.FORGOT_COOKIE_NAME;
-
+mongoConnect();
 export async function PUT(request: NextRequest) {
   try {
     let reqData = await request.json();
@@ -17,6 +18,7 @@ export async function PUT(request: NextRequest) {
     }
 
     let auth = await request.cookies.get(cookie_name);
+    console.log("execution");
 
     if (!auth) {
       return NextResponse.json(
@@ -38,7 +40,7 @@ export async function PUT(request: NextRequest) {
 
     // Manually hash the password before updating the document
     const hashedPassword = await bcrypt.hash(reqData.password, 10);
-
+    console.log(hashedPassword);
     // Construct the update object with only the password field
     let updateObject = {
       password: hashedPassword,
@@ -63,9 +65,9 @@ export async function PUT(request: NextRequest) {
         },
       }
     );
-  } catch (err) {
+  } catch (err: any) {
     return NextResponse.json(
-      { error: { message: "Internal server error" } },
+      { error: { message: err.message } },
       { status: 500 }
     );
   }

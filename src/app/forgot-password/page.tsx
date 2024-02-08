@@ -7,19 +7,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 type User = {
-  name: string;
   email: string;
-  password: string;
 };
 
-const LoginPage = () => {
-  const router = useRouter();
+const ForgotPage = () => {
   const [errorMessage, setError] = useState<any>(null);
   const [loginMessage, setLoginMessage] = useState("");
   const form = useForm<User>({
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -30,7 +26,7 @@ const LoginPage = () => {
   const onSubmit = async (data: User) => {
     console.log(data);
     try {
-      const responsedData = await fetch("/api/login", {
+      const responsedData = await fetch("/api/forgot-password", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -47,7 +43,6 @@ const LoginPage = () => {
         console.log(responseData);
         setLoginMessage(responseData.message);
         reset();
-        router.replace("/");
       }
     } catch (err: any) {
       console.log("client catch block Unexpected error:", err.message);
@@ -65,7 +60,7 @@ const LoginPage = () => {
               position={"relative"}
               top={"30px"}
             >
-              Login
+              Find Your Account
             </Typography>
             <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
               <div className="form-control">
@@ -79,25 +74,6 @@ const LoginPage = () => {
                   {...register("email")}
                 />
               </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  placeholder="password"
-                  className="input input-bordered"
-                  {...register("password")}
-                />
-                <label className="label">
-                  <Link
-                    href="/forgot-password"
-                    className="label-text-alt link link-hover"
-                  >
-                    Forgot password?
-                  </Link>
-                </label>
-              </div>
 
               {errorMessage && (
                 <p className="text-red-600 text-center text-balance w-80 font-bold ">
@@ -110,13 +86,7 @@ const LoginPage = () => {
 
               <div className="form-control mt-6">
                 <button className="btn btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? "...Loading" : "Login"}
-                </button>
-              </div>
-              <div className="form-control mt-6">
-                <button className="btn btn-secondary">
-                  Login with google
-                  <GoogleIcon />
+                  {isSubmitting ? "...Sending" : "Send Email"}
                 </button>
               </div>
             </form>
@@ -127,4 +97,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ForgotPage;
